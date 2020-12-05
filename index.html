@@ -1,0 +1,88 @@
+<div id="select-wrapper">
+    <input 
+        id="select__input" 
+        type="text" 
+        onkeyup="filterList()" 
+        placeholder="Search for names.."
+    >
+
+    <ul 
+        id="select__list"
+        style="display:none;"
+    >
+        <li>Adele</li>
+        <li>Agnes</li>
+
+        <li>Billy</li>
+        <li>Bob</li>
+
+        <li>Calvin</li>
+        <li>Christina</li>
+        <li>Cindy</li>
+    </ul>
+</div>
+
+<script>
+    window.addEventListener('click', () => isInputSelected())
+    document.getElementById("select__list").addEventListener("click", EVENT => listItemSelected(EVENT))
+
+    let input, ul, li
+    input = document.getElementById('select__input')
+    ul = document.getElementById("select__list")
+    li = ul.getElementsByTagName('li')
+
+    function listItemSelected (EVENT) {
+        setInputText(EVENT.srcElement.textContent)
+    }
+
+    function setInputText (TEXT) {
+        document.getElementById('select__input').value = TEXT
+    }
+
+    function isInputSelected () {
+        if (input === document.activeElement) ul.style.display = ''
+        else ul.style.display = 'none'
+    }
+    
+    function filterList() {
+        const INPUT = input.value.toUpperCase()
+
+        // Loop through all list items, and hide those that don't match the search query
+        for (let i = 0; i < li.length; i++) {
+            let item = li[i]
+            let value = item.textContent
+            
+            if (value.toUpperCase().indexOf(INPUT) > -1) li[i].style.display = ""
+            else li[i].style.display = "none"
+        }
+    }
+</script>
+
+<style>
+    #select-wrapper {
+        position: relative;
+        width: 200px;
+    }
+
+    #select__input {
+        width: 100%;
+    }
+
+    #select__list {
+        position: absolute;
+        padding-left: 0;
+        margin: 0;
+        border: 1px solid gray;
+        width: 100%;
+    }
+
+    #select__list li {
+        cursor: pointer;
+        list-style: none;
+        padding: 6px;
+    }
+
+    #select__list li:hover {
+        background-color: gray;
+    }
+</style>
