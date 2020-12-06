@@ -1,49 +1,188 @@
+<style>
+    #select-wrapper {
+        position: relative;
+        width: 500px;
+        border: 1px solid gray;
+    }
+
+    #select-box {
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        display: flex;
+        cursor: pointer;
+        padding: 8px;
+    }
+
+    #select__input {
+        width: 100%;
+        border: 0;
+        outline: none;
+    }
+
+    #select__input:focus {
+        border: 0;
+        appearance: none;
+        outline: none;
+    }
+
+    #select__list_input-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    #select__list-wrapper {
+        position: absolute;
+        border: 1px solid gray;
+        width: 100%;
+    }
+
+    #select__list {
+        padding-left: 0;
+        margin: 0;
+    }
+
+    #select__list li {
+        cursor: pointer;
+        list-style: none;
+        padding: 12px;
+    }
+
+    #select__list li:hover {
+        background-color: #E2E8F0;
+    }
+
+    .arrow {
+        position: relative;
+        height: 15px;
+        width: 15px;
+    }
+    .arrow::before, .arrow::after {
+        content: "";
+        position: absolute;
+        bottom: 0px;
+        width: 0.15rem;
+        height: 100%;
+        transition: all 0.5s;
+    }
+    .arrow::before {
+        left: -5px;
+        transform: rotate(45deg);
+        background-color: #394a6d;
+    }
+    .arrow::after {
+        left: 5px;
+        transform: rotate(-45deg);
+        background-color: #394a6d;
+    }
+    .open .arrow::before {
+        left: -5px;
+        transform: rotate(-45deg);
+    }
+    .open .arrow::after {
+        left: 5px;
+        transform: rotate(45deg);
+    }
+
+    .selected {
+        background-color: lightblue;
+    }
+</style>
+
 <div id="select-wrapper">
-    <input 
-        id="select__input" 
-        type="text" 
-        onkeyup="filterList()" 
-        placeholder="Search for names.."
-    >
+    <div id="select-box">
+        <span id="select__selected-value">
+            Select box
+        </span>
+        <div class="arrow"></div>
+    </div>
 
-    <ul 
-        id="select__list"
-        style="display:none;"
-    >
-        <li>Adele</li>
-        <li>Agnes</li>
+    <div id="select__list-wrapper" style="display:none;">
+        <div id="select__list_input-wrapper">
+            <span>
+                    <svg 
+                        version="1.1" 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        xmlns:xlink="http://www.w3.org/1999/xlink" 
+                        x="0px" 
+                        y="0px" 
+                        width="44px" 
+                        height="44px" 
+                        viewBox="0 0 24 24" 
+                        style="enable-background:new 0 0 24 24;" 
+                        xml:space="preserve"
+                    >
+                    <g id="Icons">
+                        <path id="search" d="M16.021,15.96l-2.374-2.375c-0.048-0.047-0.105-0.079-0.169-0.099c0.403-0.566,0.643-1.26,0.643-2.009
+                            C14.12,9.557,12.563,8,10.644,8c-1.921,0-3.478,1.557-3.478,3.478c0,1.92,1.557,3.477,3.478,3.477c0.749,0,1.442-0.239,2.01-0.643
+                            c0.019,0.063,0.051,0.121,0.098,0.169l2.375,2.374c0.19,0.189,0.543,0.143,0.79-0.104S16.21,16.15,16.021,15.96z M10.644,13.69
+                            c-1.221,0-2.213-0.991-2.213-2.213c0-1.221,0.992-2.213,2.213-2.213c1.222,0,2.213,0.992,2.213,2.213
+                            C12.856,12.699,11.865,13.69,10.644,13.69z"/>
+                    </g>
+                    <g id="Guides">
+                    </g>
+                </svg>
+            </span>
+            <input 
+                id="select__input" 
+                type="text"
+                onkeyup="filterList()" 
+                placeholder="Search.."
+            >
+        </div>
+        
+        <ul id="select__list">
+            <li>Adele</li>
+            <li>Agnes</li>
 
-        <li>Billy</li>
-        <li>Bob</li>
+            <li>Billy</li>
+            <li>Bob</li>
 
-        <li>Calvin</li>
-        <li>Christina</li>
-        <li>Cindy</li>
-    </ul>
+            <li>Calvin</li>
+            <li>Christina</li>
+            <li>Cindy</li>
+        </ul>
+    </div>
 </div>
 
 <script>
-    window.addEventListener('click', () => isInputSelected())
     document.getElementById("select__list").addEventListener("click", EVENT => listItemSelected(EVENT))
 
-    let input, ul, li
+    let input, ul, li, container
+    container = document.getElementById('select-box')
     input = document.getElementById('select__input')
     ul = document.getElementById("select__list")
     li = ul.getElementsByTagName('li')
 
+    container.addEventListener('click', function() {
+        if (document.getElementById('select__list-wrapper').style.display === '') {
+            document.getElementById('select__list-wrapper').style.display = 'none'
+            this.classList.remove('open')
+        } else {
+            document.getElementById('select__list-wrapper').style.display = ''
+            this.classList.toggle('open')
+        }
+    })
+
+    window.addEventListener('click', function (e) {
+        const select = document.getElementById('select-box')
+        const select__input = document.getElementById('select__input')
+        if (!select.contains(e.target) && !select__input.contains(e.target)) {
+            document.getElementById('select__list-wrapper').style.display = 'none'
+            container.classList.remove('open')
+        }
+    })
+
     function listItemSelected (EVENT) {
         setInputText(EVENT.srcElement.textContent)
+        EVENT.srcElement.classList.toggle('selected')
     }
 
     function setInputText (TEXT) {
-        document.getElementById('select__input').value = TEXT
+        document.getElementById('select__selected-value').innerText = TEXT
     }
 
-    function isInputSelected () {
-        if (input === document.activeElement) ul.style.display = ''
-        else ul.style.display = 'none'
-    }
-    
     function filterList() {
         const INPUT = input.value.toUpperCase()
 
@@ -57,32 +196,3 @@
         }
     }
 </script>
-
-<style>
-    #select-wrapper {
-        position: relative;
-        width: 200px;
-    }
-
-    #select__input {
-        width: 100%;
-    }
-
-    #select__list {
-        position: absolute;
-        padding-left: 0;
-        margin: 0;
-        border: 1px solid gray;
-        width: 100%;
-    }
-
-    #select__list li {
-        cursor: pointer;
-        list-style: none;
-        padding: 6px;
-    }
-
-    #select__list li:hover {
-        background-color: gray;
-    }
-</style>
