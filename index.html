@@ -177,6 +177,10 @@
     })
 
     function listItemSelected (EVENT) {
+        for (let i = 0; i < li.length; i++) {
+            let item = li[i]
+            let value = item.classList.remove('selected')
+        }
         setInputText(EVENT.srcElement.textContent)
         EVENT.srcElement.classList.toggle('selected')
     }
