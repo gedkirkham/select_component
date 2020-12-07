@@ -93,7 +93,10 @@
 </style>
 
 <div id="select-wrapper">
-    <div id="select-box">
+    <div 
+        id="select-box"
+        tabindex="0"
+    >
         <span id="select__selected-value">
             Select box
         </span>
@@ -135,21 +138,16 @@
         </div>
         
         <ul id="select__list">
-            <li>Adele</li>
-            <li>Agnes</li>
-
-            <li>Billy</li>
-            <li>Bob</li>
-
-            <li>Calvin</li>
-            <li>Christina</li>
-            <li>Cindy</li>
+            <li tabindex="0">Adele</li>
+            <li tabindex="0">Agnes</li>
         </ul>
     </div>
 </div>
 
 <script>
+    const SELECT__LIST = document.getElementById("select__list")
     document.getElementById("select__list").addEventListener("click", EVENT => listItemSelected(EVENT))
+    document.getElementById("select__list").addEventListener("keypress", EVENT => listItemSelected(EVENT))
 
     let input, ul, li, container
     container = document.getElementById('select-box')
@@ -157,15 +155,18 @@
     ul = document.getElementById("select__list")
     li = ul.getElementsByTagName('li')
 
-    container.addEventListener('click', function() {
+    const setListState = function () {
         if (document.getElementById('select__list-wrapper').style.display === '') {
             document.getElementById('select__list-wrapper').style.display = 'none'
-            this.classList.remove('open')
+            container.classList.remove('open')
         } else {
             document.getElementById('select__list-wrapper').style.display = ''
-            this.classList.toggle('open')
+            container.classList.toggle('open')
         }
-    })
+    }
+
+    container.addEventListener('click', () => setListState())
+    container.addEventListener('keypress', () => setListState())
 
     window.addEventListener('click', function (e) {
         const select = document.getElementById('select-box')
@@ -183,6 +184,7 @@
         }
         setInputText(EVENT.srcElement.textContent)
         EVENT.srcElement.classList.toggle('selected')
+        setListState()
     }
 
     function setInputText (TEXT) {
